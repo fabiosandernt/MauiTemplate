@@ -1,0 +1,1 @@
+C:\Projects\MauiBlazorWeb\MauiBlazorWeb.Maui\MauiBlazorWeb.Maui.csproj;x64

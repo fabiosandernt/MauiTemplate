@@ -1,0 +1,155 @@
+﻿@page "/config"
+@using System.Collections.Generic
+
+<div class="container mt-4">
+    <h2>Configuração - Gabarito ao clicar no botão pesquisar</h2>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label for="gabaritoTipo" class="form-label">Tipo de Gabarito:</label>
+            <div>
+                <input type="checkbox" id="padrao" @bind="IsPadrao" />
+                <label for="padrao">Padrão</label>
+                <input type="checkbox" id="estruturado" @bind="IsEstruturado" />
+                <label for="estruturado">Estruturado</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <label for="gabarito" class="form-label">Gabarito:</label>
+            <select id="gabarito" class="form-select" @bind="Gabarito">
+                <option value="">Selecione</option>
+                <option value="Padrão">Padrão</option>
+                <option value="Estudo">Estudo</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="agente" class="form-label">Agente:</label>
+            <select id="agente" class="form-select" @bind="Agente">
+                <option value="">Selecione</option>
+                <option value="Agente 1">Agente 1</option>
+                <option value="Agente 2">Agente 2</option>
+                <option value="Agente 3">Agente 3</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="insumo" class="form-label">Insumo:</label>
+            <select id="insumo" class="form-select" @bind="Insumo">
+                <option value="">Selecione</option>
+                <option value="Insumo 1">Insumo 1</option>
+                <option value="Insumo 2">Insumo 2</option>
+                <option value="Insumo 3">Insumo 3</option>
+            </select>
+        </div>
+    </div>
+
+    <button class="btn btn-primary mb-4" @onclick="Pesquisar">Pesquisar</button>
+
+    <ul class="nav nav-tabs mb-3">
+        @foreach (var tab in new[] { "Referencia", "Instrucoes", "Documentos", "Historico", "Anexos" })
+        {
+            <li class="nav-item">
+                <a class="nav-link @(SelectedTab == tab ? "active" : "")" @onclick="() => SelectTab(tab)">@tab</a>
+            </li>
+        }
+    </ul>
+
+    <div class="tab-content">
+        @if (SelectedTab == "Referencia")
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Seq.</th>
+                            <th>Tipo Documento</th>
+                            <th>Documento</th>
+                            <th>Apelido</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in MockItems.Where(item =>
+                       (string.IsNullOrEmpty(Gabarito) || item.Gabarito == Gabarito) &&
+                       (string.IsNullOrEmpty(Agente) || item.Agente == Agente) &&
+                       (string.IsNullOrEmpty(Insumo) || item.Insumo == Insumo)
+                       ).ToList())
+                        {
+                            <tr>
+                                <td>@item.Seq</td>
+                                <td>@item.TipoDocumento</td>
+                                <td>@item.Documento</td>
+                                <td>@item.Apelido</td>
+                                <td>
+                                    <button class="btn btn-sm @* btn-warning *@" @onclick="() => Editar(item.Seq)">Editar</button>
+                                    <button class="btn btn-sm @* btn-danger *@" @onclick="() => Deletar(item.Seq)">Deletar</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else if (SelectedTab == "Instrucoes")
+        {
+            <p>Conteúdo da aba Instruções</p>
+        }
+        else if (SelectedTab == "Documentos")
+        {
+            <p>Conteúdo da aba Documentos</p>
+        }
+        else if (SelectedTab == "Historico")
+        {
+            <p>Conteúdo da aba Histórico</p>
+        }
+        else if (SelectedTab == "Anexos")
+        {
+            <p>Conteúdo da aba Anexos</p>
+        }
+    </div>
+</div>
+
+@code {
+    private string Gabarito { get; set; }
+    private string Agente { get; set; }
+    private string Insumo { get; set; }
+    private string SelectedTab { get; set; } = "Referencia";
+    private bool IsPadrao { get; set; }
+    private bool IsEstruturado { get; set; }
+
+    private void Pesquisar()
+    {
+        // Lógica de pesquisa
+    }
+
+    private void SelectTab(string tab)
+    {
+        SelectedTab = tab;
+    }
+
+    private void Editar(int seq)
+    {
+        // Lógica de edição
+    }
+
+    private void Deletar(int seq)
+    {
+        // Lógica de exclusão
+    }
+
+    private List<MockItem> MockItems { get; set; } = new List<MockItem>
+    {
+        new MockItem { Seq = 1, TipoDocumento = "Tipo 1", Documento = "Doc 1", Apelido = "Apelido 1", Gabarito = "Padrão", Agente = "Agente 1", Insumo = "Insumo 1" },
+        new MockItem { Seq = 2, TipoDocumento = "Tipo 2", Documento = "Doc 2", Apelido = "Apelido 2", Gabarito = "Estudo", Agente = "Agente 2", Insumo = "Insumo 2" }
+    };
+
+    public class MockItem
+    {
+        public int Seq { get; set; }
+        public string TipoDocumento { get; set; }
+        public string Documento { get; set; }
+        public string Apelido { get; set; }
+        public string Gabarito { get; set; }
+        public string Agente { get; set; }
+        public string Insumo { get; set; }
+    }
+}
